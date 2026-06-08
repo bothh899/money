@@ -367,21 +367,16 @@
       <div class="filter-bar" id="month-chips"></div>
       <div class="section-header">
         <div class="section-title">ប្រតិបត្តិការ</div>
-       <input
-  type="text"
-  id="f-category"
-  placeholder="បញ្ចូលប្រភេទ..."
-  list="category-list"
-/>
-
-<datalist id="category-list">
-  <option value="🍔 អាហារ">
-  <option value="🚗 ដឹកជញ្ជូន">
-  <option value="🛒 ទិញទំនិញ">
-  <option value="💊 សុខភាព">
-  <option value="🎉 កំសាន្ត">
-  <option value="💰 ប្រាក់ខែ">
-</datalist>
+        <select id="cat-filter" style="background:none;border:none;color:var(--blue);font-size:15px;font-family:inherit;cursor:pointer;outline:none;">
+          <option value="">ទាំងអស់</option>
+          <option value="🍜 អាហារ">🍜 អាហារ</option>
+          <option value="🚗 ដឹកជញ្ជូន">🚗 ដឹកជញ្ជូន</option>
+          <option value="🛍️ ទិញទំនិញ">🛍️ ទិញទំនិញ</option>
+          <option value="🏥 សុខភាព">🏥 សុខភាព</option>
+          <option value="🎬 កំសាន្ត">🎬 កំសាន្ត</option>
+          <option value="💼 ប្រាក់ខែ">💼 ប្រាក់ខែ</option>
+          <option value="📦 ផ្សេងៗ">📦 ផ្សេងៗ</option>
+        </select>
       </div>
       <div id="tx-list"></div>
     </div>
@@ -460,7 +455,27 @@
         <div class="form-row"><div class="form-label">ចំណាំ</div><input type="text" class="form-input" id="f-note" placeholder="ឧ. ទិញ iPhone"></div>
         <div class="form-row"><div class="form-label">ទឹកប្រាក់</div><input type="number" class="form-input" id="f-amount" placeholder="0.00" step="0.01" inputmode="decimal"></div>
         <div class="form-row"><div class="form-label">រូបិយប័ណ្ណ</div><select class="form-input" id="f-currency"><option value="USD">USD ($)</option><option value="KHR">KHR (៛)</option></select></div>
-        <div class="form-row"><div class="form-label">ប្រភេទ</div><select class="form-input" id="f-category"><option value="🍜 អាហារ">🍜 អាហារ</option><option value="🚗 ដឹកជញ្ជូន">🚗 ដឹកជញ្ជូន</option><option value="🛍️ ទិញទំនិញ">🛍️ ទិញទំនិញ</option><option value="🏥 សុខភាព">🏥 សុខភាព</option><option value="🎬 កំសាន្ត">🎬 កំសាន្ត</option><option value="💼 ប្រាក់ខែ">💼 ប្រាក់ខែ</option><option value="📦 ផ្សេងៗ">📦 ផ្សេងៗ</option></select></div>
+<div class="form-row">
+  <div class="form-label">ប្រភេទ</div>
+
+  <input
+    type="text"
+    class="form-input"
+    id="f-category"
+    placeholder="បញ្ចូលប្រភេទ..."
+    list="category-list"
+  >
+
+  <datalist id="category-list">
+    <option value="🍜 អាហារ">
+    <option value="🚗 ដឹកជញ្ជូន">
+    <option value="🛍️ ទិញទំនិញ">
+    <option value="🏥 សុខភាព">
+    <option value="🎬 កំសាន្ត">
+    <option value="💼 ប្រាក់ខែ">
+    <option value="📦 ផ្សេងៗ">
+  </datalist>
+</div>
         <div class="form-row"><div class="form-label">កាលបរិច្ឆេទ</div><input type="date" class="form-input" id="f-date"></div>
       </div>
       <button class="btn-submit expense" id="btn-add-submit">+ ចំណាយ</button>
