@@ -63,6 +63,31 @@
     overscroll-behavior: none;
   }
 
+  /* ─── LOADING SPLASH ─── */
+  #loading-screen {
+    position: fixed; inset: 0; z-index: 3000;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px;
+    background: linear-gradient(160deg, #1a9e5c 0%, #27ae60 25%, #5a52d5 65%, #3a2f90 100%);
+    transition: opacity 0.3s ease;
+  }
+  #loading-screen.fade-out { opacity: 0; pointer-events: none; }
+  #loading-screen.gone { display: none; }
+  .loading-logo { font-size: 56px; animation: logoPulse 1.4s ease-in-out infinite; }
+  @keyframes logoPulse {
+    0%,100% { transform: scale(1); }
+    50% { transform: scale(1.12); }
+  }
+  .loading-spinner {
+    width: 36px; height: 36px;
+    border: 3px solid rgba(255,255,255,0.3);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { color: rgba(255,255,255,0.85); font-size: 14px; }
+
   /* ─── AUTH SCREEN ─── */
   #auth-screen {
     position: fixed;
@@ -550,8 +575,15 @@
 </head>
 <body>
 
+<!-- ═══════════════ LOADING SPLASH ═══════════════ -->
+<div id="loading-screen">
+  <div class="loading-logo">💳</div>
+  <div class="loading-spinner"></div>
+  <div class="loading-text">កំពុងផ្ទុក...</div>
+</div>
+
 <!-- ═══════════════ AUTH SCREEN ═══════════════ -->
-<div id="auth-screen">
+<div id="auth-screen" style="display:none">
   <div class="auth-card">
     <span class="auth-logo">💳</span>
     <h1 class="auth-title">កាបូបលុយ</h1>
@@ -903,7 +935,7 @@ const firebaseConfig = {
   // ★ ប្រើ Vercel domain របស់អ្នកជំនួស firebaseapp.com
   // ដើម្បីឲ្យ Safari មិនរារាំង third-party cookies
   // បើ domain Vercel របស់អ្នកខុស សូមប្តូរ: yourapp.vercel.app
-  authDomain: "expensetracker-9f470.firebaseapp.com",
+  authDomain: "YOUR-APP.vercel.app", // ★ ប្តូរជា Vercel domain ពិតរបស់អ្នក
   projectId: "expensetracker-9f470",
   storageBucket: "expensetracker-9f470.firebasestorage.app",
   messagingSenderId: "825269346962",
@@ -969,13 +1001,17 @@ function txCol() { return collection(db, 'users', currentUser.uid, 'transactions
 // ═══ AUTH SCREEN ════════════════════════════════
 function showApp() {
   const as = document.getElementById('auth-screen');
-  as.classList.add('hiding');
-  setTimeout(() => as.style.display = 'none', 380);
+  if (as.style.display !== 'none') {
+    as.classList.add('hiding');
+    setTimeout(() => { as.style.display = 'none'; as.classList.remove('hiding'); }, 380);
+  }
   document.getElementById('app').style.display = '';
 }
 function showAuthScreen() {
-  document.getElementById('auth-screen').style.display = 'flex';
-  document.getElementById('auth-screen').classList.remove('hiding');
+  document.getElementById('app').style.display = 'none';
+  const as = document.getElementById('auth-screen');
+  as.classList.remove('hiding');
+  as.style.display = 'flex';
   document.getElementById('app').style.display = 'none';
   transactions = [];
 }
@@ -1074,29 +1110,6 @@ document.getElementById('btn-google-signin').addEventListener('click', async () 
   }
 });
 
-// ── Handle redirect result (iPhone Safari flow) ──
-// Firebase SDK ហៅ getRedirectResult ដោយស្វ័យប្រវត្តិ
-// នៅពេល page reload បន្ទាប់ពី Google redirect
-getRedirectResult(auth).then(result => {
-  if (result && result.user) {
-    showToast('✅ ចូលជោគជ័យ!');
-    // onAuthStateChanged នឹង handle showApp() ដោយស្វ័យប្រវត្តិ
-  }
-}).catch(e => {
-  if (!e.code) return;
-  // auth/null-user = គ្មាន redirect result (normal on first load)
-  if (e.code === 'auth/null-user') return;
-  showAuthErr(authErrMsg(e.code));
-  if (e.code === 'auth/configuration-not-found' || e.code === 'auth/operation-not-allowed') {
-    showAuthInfo(
-      '📋 <b>ជំហានដំណោះស្រាយ:</b><br>' +
-      '1. ចូល <a href="https://console.firebase.google.com" target="_blank" style="color:inherit;text-decoration:underline">Firebase Console</a><br>' +
-      '2. Authentication → Sign-in method → Google → Enable<br>' +
-      '3. Settings → Authorized domains → បន្ថែម Vercel domain'
-    );
-  }
-});
-
 // Email/Password toggle
 document.getElementById('auth-toggle-switch').addEventListener('click', () => {
   isRegMode = !isRegMode;
@@ -1130,21 +1143,66 @@ document.getElementById('btn-auth-submit').addEventListener('click', handleEmail
 document.getElementById('auth-pass-input').addEventListener('keydown', e => { if (e.key === 'Enter') handleEmailAuth(); });
 document.getElementById('auth-email-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('auth-pass-input').focus(); });
 
-// Auth state
-onAuthStateChanged(auth, user => {
-  if (user) {
-    currentUser = user;
-    setAuthLoading(false);
-    showApp();
-    updateUserProfile(user);
-    initFirestoreListener();
-  } else {
-    currentUser = null;
-    if (unsubFS) { unsubFS(); unsubFS = null; }
-    transactions = [];
-    showAuthScreen();
+// ★ LOADING SPLASH HELPERS
+function hideLoadingSplash() {
+  const ls = document.getElementById('loading-screen');
+  if (!ls || ls.classList.contains('gone')) return;
+  ls.classList.add('fade-out');
+  setTimeout(() => ls.classList.add('gone'), 320);
+}
+
+// ★ INIT AUTH — Sequential flow fixes iOS Safari redirect issue
+// Problem: onAuthStateChanged fires null BEFORE getRedirectResult on iOS
+// Fix: await getRedirectResult first → auth state is correct when listener fires
+async function initAuth() {
+  let redirectErr = null;
+
+  // Step 1: Complete any pending Google redirect FIRST
+  try {
+    await getRedirectResult(auth);
+    // If redirect succeeded, Firebase updates auth state internally.
+    // onAuthStateChanged will fire with the user in Step 2.
+  } catch(e) {
+    const ignorable = ['auth/null-user', 'auth/no-current-user', 'auth/cancelled-popup-request'];
+    if (e.code && !ignorable.includes(e.code)) {
+      redirectErr = e;
+    }
   }
-});
+
+  // Step 2: NOW listen to auth state — first call is guaranteed accurate
+  onAuthStateChanged(auth, user => {
+    hideLoadingSplash();
+    if (user) {
+      currentUser = user;
+      setAuthLoading(false);
+      showApp();
+      updateUserProfile(user);
+      initFirestoreListener();
+    } else {
+      currentUser = null;
+      if (unsubFS) { unsubFS(); unsubFS = null; }
+      transactions = [];
+      showAuthScreen();
+      // Show any redirect error after auth screen is visible
+      if (redirectErr) {
+        setTimeout(() => {
+          showAuthErr(authErrMsg(redirectErr.code));
+          if (redirectErr.code === 'auth/configuration-not-found' ||
+              redirectErr.code === 'auth/operation-not-allowed') {
+            showAuthInfo(
+              '📋 <b>ជំហានដំណោះស្រាយ:</b><br>' +
+              '1. <a href="https://console.firebase.google.com" target="_blank" style="color:inherit;text-decoration:underline">Firebase Console</a> → Authentication → Sign-in method<br>' +
+              '2. ចុច <b>Google</b> → Enable → Save<br>' +
+              '3. Settings → Authorized domains → បន្ថែម Vercel domain'
+            );
+          }
+          redirectErr = null;
+        }, 300);
+      }
+    }
+  });
+}
+initAuth();
 
 // Logout
 document.getElementById('btn-logout').addEventListener('click', async () => {
