@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>កាបូបលុយ</title>
+<link rel="icon" href="kabob.jpg" type="image/jpeg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Battambang:wght@400;700&display=swap" rel="stylesheet">
 <style>
@@ -48,7 +49,8 @@
   #loading-screen.fade-out { opacity: 0; pointer-events: none; }
   #loading-screen.gone { display: none; }
   .loading-logo { font-size: 56px; animation: logoPulse 1.4s ease-in-out infinite; }
-  @keyframes logoPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+  .loading-logo-img { width: 80px; height: 80px; border-radius: 22px; object-fit: cover; box-shadow: 0 6px 24px rgba(0,0,0,0.3); animation: logoPulse 1.4s ease-in-out infinite; }
+  @keyframes logoPulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.08); } }
   .loading-spinner {
     width: 36px; height: 36px;
     border: 3px solid rgba(255,255,255,0.3); border-top-color: #fff;
@@ -56,6 +58,45 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-text { color: rgba(255,255,255,0.85); font-size: 14px; }
+  /* ─── PASSCODE SCREEN ─── */
+  #passcode-screen {
+    position: fixed; inset: 0; z-index: 2800;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    background: linear-gradient(160deg, #1a9e5c 0%, #27ae60 25%, #5a52d5 65%, #3a2f90 100%);
+    padding: 24px; transition: opacity 0.3s;
+  }
+  #passcode-screen.gone { display: none; }
+  #passcode-screen.fade-out { opacity: 0; pointer-events: none; }
+  .passcode-logo-img { width: 70px; height: 70px; border-radius: 20px; object-fit: cover; box-shadow: 0 4px 16px rgba(0,0,0,0.3); margin-bottom: 16px; }
+  .passcode-title { color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 4px; }
+  .passcode-sub { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 32px; }
+  .passcode-dots { display: flex; gap: 18px; margin-bottom: 40px; }
+  .passcode-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid rgba(255,255,255,0.8); background: transparent; transition: background 0.15s, transform 0.1s; }
+  .passcode-dot.filled { background: #fff; transform: scale(1.15); }
+  .passcode-dot.shake { animation: dotShake 0.35s ease; }
+  @keyframes dotShake { 0%,100% { transform: translateX(0); } 20%,60% { transform: translateX(-5px); } 40%,80% { transform: translateX(5px); } }
+  .passcode-keypad { display: grid; grid-template-columns: repeat(3, 72px); gap: 14px; }
+  .passcode-key { width: 72px; height: 72px; border-radius: 50%; border: none; background: rgba(255,255,255,0.18); color: #fff; font-size: 24px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: inherit; transition: background 0.1s, transform 0.1s; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .passcode-key:active { background: rgba(255,255,255,0.38); transform: scale(0.9); }
+  .passcode-key.del { font-size: 20px; background: rgba(255,255,255,0.1); }
+  .passcode-key.empty { background: transparent !important; pointer-events: none; }
+  .passcode-error { color: rgba(255,120,120,1); font-size: 14px; margin-top: 16px; min-height: 20px; text-align: center; }
+  /* ─── PASSCODE SETUP MODAL ─── */
+  .passcode-modal-overlay { position: fixed; inset: 0; z-index: 2900; background: rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; padding: 24px; }
+  .passcode-modal-overlay.hidden { display: none; }
+  .passcode-modal { background: var(--bg); border-radius: 24px; padding: 28px 20px 24px; width: 100%; max-width: 340px; display: flex; flex-direction: column; align-items: center; }
+  .passcode-modal-title { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+  .passcode-modal-sub { font-size: 14px; color: var(--label3); margin-bottom: 24px; text-align: center; }
+  .passcode-modal-dots { display: flex; gap: 16px; margin-bottom: 28px; }
+  .passcode-modal-dot { width: 14px; height: 14px; border-radius: 50%; border: 2px solid var(--sep); background: transparent; transition: background 0.15s; }
+  .passcode-modal-dot.filled { background: var(--blue); border-color: var(--blue); }
+  .passcode-modal-keypad { display: grid; grid-template-columns: repeat(3, 64px); gap: 12px; }
+  .passcode-modal-key { width: 64px; height: 64px; border-radius: 50%; border: none; background: var(--bg3); color: var(--label1); font-size: 22px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; font-family: inherit; transition: opacity 0.1s, transform 0.1s; }
+  .passcode-modal-key:active { opacity: 0.6; transform: scale(0.9); }
+  .passcode-modal-key.del { font-size: 18px; }
+  .passcode-modal-key.empty { background: transparent !important; pointer-events: none; }
+  .passcode-modal-cancel { margin-top: 18px; background: none; border: none; color: var(--blue); font-size: 16px; cursor: pointer; font-family: inherit; padding: 6px 16px; }
   /* ─── AUTH SCREEN ─── */
   #auth-screen {
     position: fixed; inset: 0; z-index: 2000;
@@ -84,6 +125,7 @@
     animation: cardSlideUp 0.5s cubic-bezier(0.32,0.72,0,1) 0.1s both;
   }
   @keyframes cardSlideUp { from { opacity: 0; transform: translateY(32px); } to { opacity: 1; transform: translateY(0); } }
+  .auth-logo-img { width: 72px; height: 72px; border-radius: 20px; object-fit: cover; display: block; margin: 0 auto 12px; box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
   .auth-logo { font-size: 62px; text-align: center; display: block; margin-bottom: 10px; }
   .auth-title { font-size: 30px; font-weight: 700; text-align: center; letter-spacing: -0.5px; margin-bottom: 4px; color: var(--label1); }
   .auth-sub { font-size: 14px; color: var(--label3); text-align: center; margin-bottom: 28px; }
@@ -245,12 +287,35 @@
   .btn-submit:active { opacity:0.85; transform:scale(0.98); }
   .btn-submit.expense { background:var(--red); box-shadow:0 4px 14px rgba(255,59,48,0.3); }
   .btn-submit.income { background:var(--green); box-shadow:0 4px 14px rgba(52,199,89,0.3); }
+  /* ─── STATS ─── */
   .stat-card { background:var(--bg2); border-radius:var(--radius-lg); padding:18px 16px; margin-bottom:12px; box-shadow:var(--card-shadow); }
   .stat-card-title { font-size:13px; color:var(--label3); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:12px; }
   .progress-bar-wrap { margin-bottom:10px; }
   .progress-label { display:flex; justify-content:space-between; font-size:14px; margin-bottom:5px; }
   .progress-track { background:var(--bg3); border-radius:4px; height:8px; overflow:hidden; }
   .progress-fill { height:100%; border-radius:4px; transition:width 0.5s cubic-bezier(0.34,1.56,0.64,1); }
+  /* Stats period/type controls */
+  .stats-period-bar { display:flex; gap:6px; margin-bottom:12px; overflow-x:auto; scrollbar-width:none; padding-bottom:2px; }
+  .stats-period-bar::-webkit-scrollbar { display:none; }
+  .stats-period-chip { padding:7px 14px; border:none; border-radius:20px; font-size:14px; font-family:inherit; cursor:pointer; white-space:nowrap; font-weight:500; flex-shrink:0; background:var(--bg2); color:var(--label2); box-shadow:var(--card-shadow); transition:all 0.15s; }
+  .stats-period-chip.active { background:var(--blue); color:#fff; box-shadow:0 3px 10px rgba(0,122,255,0.3); }
+  .stats-type-seg { display:flex; background:var(--bg3); border-radius:9px; padding:2px; margin-bottom:14px; }
+  .stats-type-btn { flex:1; padding:7px; text-align:center; border-radius:7px; font-size:14px; font-weight:500; color:var(--label2); background:transparent; border:none; cursor:pointer; font-family:inherit; transition:all 0.18s; }
+  .stats-type-btn.active { background:var(--bg2); color:var(--label1); box-shadow:0 1px 4px rgba(0,0,0,0.12); }
+  .stats-summary-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
+  .stats-summary-item { background:var(--bg2); border-radius:var(--radius-md); padding:14px; box-shadow:var(--card-shadow); }
+  .stats-summary-lbl { font-size:11px; color:var(--label3); text-transform:uppercase; letter-spacing:0.4px; margin-bottom:6px; }
+  .stats-summary-val { font-size:19px; font-weight:700; letter-spacing:-0.5px; line-height:1.2; }
+  .stats-compare-bar { display:flex; align-items:flex-end; gap:4px; height:90px; padding-top:8px; }
+  .stats-bar-group { flex:1; display:flex; gap:2px; align-items:flex-end; }
+  .stats-bar-inc { flex:1; border-radius:4px 4px 0 0; background:var(--green); min-height:3px; transition:height 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .stats-bar-exp { flex:1; border-radius:4px 4px 0 0; background:var(--red); min-height:3px; transition:height 0.4s cubic-bezier(0.34,1.56,0.64,1); }
+  .stats-bar-labels { display:flex; gap:4px; margin-top:5px; }
+  .stats-bar-label { flex:1; text-align:center; font-size:10px; color:var(--label3); }
+  .stats-legend { display:flex; gap:14px; margin-bottom:8px; }
+  .stats-legend-item { display:flex; align-items:center; gap:5px; font-size:12px; color:var(--label3); }
+  .stats-legend-dot { width:8px; height:8px; border-radius:50%; flex-shrink:0; }
+  /* ─── SETTINGS ─── */
   .settings-group { background:var(--bg2); border-radius:var(--radius-lg); overflow:hidden; margin-bottom:16px; box-shadow:var(--card-shadow); }
   .settings-row { display:flex; align-items:center; padding:13px 16px; border-bottom:0.5px solid var(--sep2); gap:14px; cursor:pointer; transition:background 0.1s; }
   .settings-row:active { background:var(--bg3); }
@@ -261,14 +326,24 @@
   .settings-row-arrow { color:var(--label3); font-size:13px; }
   .user-avatar { width:46px; height:46px; border-radius:50%; background:linear-gradient(135deg, var(--blue), var(--purple)); display:flex; align-items:center; justify-content:center; font-size:20px; font-weight:700; flex-shrink:0; color:#fff; overflow:hidden; }
   .user-avatar img { width:100%; height:100%; object-fit:cover; }
-  .toast { position:fixed; bottom:calc(90px + var(--safe-bot)); left:50%; transform:translateX(-50%) translateY(20px); background:var(--label1); color:var(--bg); padding:12px 20px; border-radius:24px; font-size:14px; font-weight:500; z-index:999; pointer-events:none; opacity:0; transition:opacity 0.25s, transform 0.25s cubic-bezier(0.34,1.56,0.64,1); white-space:nowrap; }
-  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
   .ios-toggle { position:relative; width:51px; height:31px; flex-shrink:0; cursor:pointer; }
   .ios-toggle input { opacity:0; width:0; height:0; }
   .ios-toggle-track { position:absolute; inset:0; background:var(--bg3); border-radius:31px; transition:background 0.25s; }
   .ios-toggle input:checked + .ios-toggle-track { background:var(--green); }
   .ios-toggle-thumb { position:absolute; top:2px; left:2px; width:27px; height:27px; background:#fff; border-radius:50%; box-shadow:0 2px 6px rgba(0,0,0,0.25); transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1); }
   .ios-toggle input:checked ~ .ios-toggle-thumb { transform:translateX(20px); }
+  /* Category manager in settings */
+  .cat-manage-row { display:flex; align-items:center; padding:11px 16px; border-bottom:0.5px solid var(--sep2); gap:10px; }
+  .cat-manage-row:last-child { border-bottom:none; }
+  .cat-manage-name { flex:1; font-size:15px; }
+  .cat-del-btn { background:none; border:none; color:var(--red); font-size:18px; cursor:pointer; padding:2px 8px; border-radius:6px; transition:opacity 0.15s; }
+  .cat-del-btn:active { opacity:0.5; }
+  .cat-add-row { display:flex; gap:8px; margin-bottom:16px; }
+  .cat-add-input { flex:1; padding:12px 14px; border:1px solid var(--sep); border-radius:12px; background:var(--bg2); font-size:15px; color:var(--label1); font-family:inherit; outline:none; -webkit-appearance:none; transition:border-color 0.2s; }
+  .cat-add-input:focus { border-color:var(--blue); }
+  .cat-add-btn { padding:12px 16px; background:var(--blue); color:#fff; border:none; border-radius:12px; font-size:15px; font-weight:600; cursor:pointer; font-family:inherit; white-space:nowrap; transition:opacity 0.15s; box-shadow:0 3px 10px rgba(0,122,255,0.3); }
+  .cat-add-btn:active { opacity:0.8; }
+  /* ─── MISC ─── */
   .cat-food { background:rgba(255,149,0,0.15); } .cat-transport { background:rgba(0,122,255,0.15); }
   .cat-shopping { background:rgba(175,82,222,0.15); } .cat-health { background:rgba(255,59,48,0.15); }
   .cat-income { background:rgba(52,199,89,0.15); } .cat-other { background:rgba(142,142,147,0.15); }
@@ -297,23 +372,78 @@
   .btn-report-action:active { opacity:0.8; transform:scale(0.97); }
   .btn-report-share { background:var(--blue); color:#fff; box-shadow:0 4px 12px rgba(0,122,255,0.3); }
   .btn-report-copy { background:var(--bg2); color:var(--label1); box-shadow:var(--card-shadow); }
+  .toast { position:fixed; bottom:calc(90px + var(--safe-bot)); left:50%; transform:translateX(-50%) translateY(20px); background:var(--label1); color:var(--bg); padding:12px 20px; border-radius:24px; font-size:14px; font-weight:500; z-index:999; pointer-events:none; opacity:0; transition:opacity 0.25s, transform 0.25s cubic-bezier(0.34,1.56,0.64,1); white-space:nowrap; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
   @keyframes fadeSlideIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
   .tx-item { animation:fadeSlideIn 0.25s ease both; }
 </style>
 </head>
 <body>
 
-<!-- LOADING SPLASH -->
+<!-- ══ PASSCODE SCREEN ══ -->
+<div id="passcode-screen" class="gone">
+  <img src="kabob.jpg" class="passcode-logo-img" onerror="this.style.display='none'">
+  <div class="passcode-title">កាបូបលុយ</div>
+  <div class="passcode-sub" id="pc-sub">បញ្ចូល Passcode</div>
+  <div class="passcode-dots" id="pc-dots">
+    <div class="passcode-dot"></div><div class="passcode-dot"></div>
+    <div class="passcode-dot"></div><div class="passcode-dot"></div>
+  </div>
+  <div class="passcode-keypad">
+    <button class="passcode-key" data-k="1">1</button>
+    <button class="passcode-key" data-k="2">2</button>
+    <button class="passcode-key" data-k="3">3</button>
+    <button class="passcode-key" data-k="4">4</button>
+    <button class="passcode-key" data-k="5">5</button>
+    <button class="passcode-key" data-k="6">6</button>
+    <button class="passcode-key" data-k="7">7</button>
+    <button class="passcode-key" data-k="8">8</button>
+    <button class="passcode-key" data-k="9">9</button>
+    <button class="passcode-key empty"></button>
+    <button class="passcode-key" data-k="0">0</button>
+    <button class="passcode-key del" data-k="del">⌫</button>
+  </div>
+  <div class="passcode-error" id="pc-error"></div>
+</div>
+
+<!-- ══ PASSCODE SETUP MODAL ══ -->
+<div class="passcode-modal-overlay hidden" id="pc-modal-overlay">
+  <div class="passcode-modal">
+    <div class="passcode-modal-title" id="pc-modal-title">កំណត់ Passcode</div>
+    <div class="passcode-modal-sub" id="pc-modal-sub">បញ្ចូលលេខ ៤ ខ្ទង់ថ្មី</div>
+    <div class="passcode-modal-dots" id="pc-modal-dots">
+      <div class="passcode-modal-dot"></div><div class="passcode-modal-dot"></div>
+      <div class="passcode-modal-dot"></div><div class="passcode-modal-dot"></div>
+    </div>
+    <div class="passcode-modal-keypad">
+      <button class="passcode-modal-key" data-mk="1">1</button>
+      <button class="passcode-modal-key" data-mk="2">2</button>
+      <button class="passcode-modal-key" data-mk="3">3</button>
+      <button class="passcode-modal-key" data-mk="4">4</button>
+      <button class="passcode-modal-key" data-mk="5">5</button>
+      <button class="passcode-modal-key" data-mk="6">6</button>
+      <button class="passcode-modal-key" data-mk="7">7</button>
+      <button class="passcode-modal-key" data-mk="8">8</button>
+      <button class="passcode-modal-key" data-mk="9">9</button>
+      <button class="passcode-modal-key empty"></button>
+      <button class="passcode-modal-key" data-mk="0">0</button>
+      <button class="passcode-modal-key del" data-mk="del">⌫</button>
+    </div>
+    <button class="passcode-modal-cancel" id="pc-modal-cancel">បោះបង់</button>
+  </div>
+</div>
+
+<!-- ══ LOADING SPLASH ══ -->
 <div id="loading-screen">
-  <div class="loading-logo">💳</div>
+  <img src="kabob.jpg" class="loading-logo-img" onerror="this.outerHTML='<div class=\'loading-logo\'>💳</div>'">
   <div class="loading-spinner"></div>
   <div class="loading-text">កំពុងផ្ទុក...</div>
 </div>
 
-<!-- AUTH SCREEN -->
+<!-- ══ AUTH SCREEN ══ -->
 <div id="auth-screen" style="display:none">
   <div class="auth-card">
-    <span class="auth-logo">💳</span>
+    <img src="kabob.jpg" class="auth-logo-img" onerror="this.outerHTML='<span class=\'auth-logo\'>💳</span>'">
     <h1 class="auth-title">កាបូបលុយ</h1>
     <p class="auth-sub">គ្រប់គ្រងការចំណូល-ចំណាយ</p>
     <button class="btn-google" id="btn-google-signin">
@@ -339,8 +469,9 @@
   </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- ══ MAIN APP ══ -->
 <div class="app" id="app" style="display:none">
+  <!-- HOME -->
   <div class="screen" id="screen-home">
     <div class="nav nav-large">
       <div style="display:flex;justify-content:space-between;align-items:flex-end;">
@@ -367,31 +498,61 @@
       <div class="filter-bar" id="month-chips"></div>
       <div class="section-header">
         <div class="section-title">ប្រតិបត្តិការ</div>
-        <select id="cat-filter" style="background:none;border:none;color:var(--blue);font-size:15px;font-family:inherit;cursor:pointer;outline:none;">
-          <option value="">ទាំងអស់</option>
-          <option value="🍜 អាហារ">🍜 អាហារ</option>
-          <option value="🚗 ដឹកជញ្ជូន">🚗 ដឹកជញ្ជូន</option>
-          <option value="🛍️ ទិញទំនិញ">🛍️ ទិញទំនិញ</option>
-          <option value="🏥 សុខភាព">🏥 សុខភាព</option>
-          <option value="🎬 កំសាន្ត">🎬 កំសាន្ត</option>
-          <option value="💼 ប្រាក់ខែ">💼 ប្រាក់ខែ</option>
-          <option value="📦 ផ្សេងៗ">📦 ផ្សេងៗ</option>
-        </select>
+        <select id="cat-filter" style="background:none;border:none;color:var(--blue);font-size:15px;font-family:inherit;cursor:pointer;outline:none;max-width:120px;"></select>
       </div>
       <div id="tx-list"></div>
     </div>
   </div>
+
+  <!-- STATS (Enhanced) -->
   <div class="screen hidden" id="screen-stats">
     <div class="nav"><div class="nav-title">ស្ថិតិ</div></div>
     <div class="content" style="padding-top:16px;">
-      <div class="stat-card"><div class="stat-card-title">ចំណាយតាមប្រភេទ (សរុប)</div><div id="cat-breakdown"></div></div>
+      <!-- Period Filter -->
+      <div class="stats-period-bar" id="stats-period-bar">
+        <button class="stats-period-chip active" data-period="month">ខែនេះ</button>
+        <button class="stats-period-chip" data-period="3month">៣ ខែ</button>
+        <button class="stats-period-chip" data-period="6month">៦ ខែ</button>
+        <button class="stats-period-chip" data-period="year">ឆ្នាំនេះ</button>
+        <button class="stats-period-chip" data-period="all">ទាំងអស់</button>
+      </div>
+      <!-- Type Seg -->
+      <div class="stats-type-seg">
+        <button class="stats-type-btn active" data-stype="all">ទាំងអស់</button>
+        <button class="stats-type-btn" data-stype="income">💰 ចំណូល</button>
+        <button class="stats-type-btn" data-stype="expense">💸 ចំណាយ</button>
+      </div>
+      <!-- Summary Cards -->
+      <div class="stats-summary-grid" id="stats-summary-grid">
+        <div class="stats-summary-item"><div class="stats-summary-lbl">ចំណូលសរុប</div><div class="stats-summary-val" id="ss-income" style="color:var(--green)">$0</div></div>
+        <div class="stats-summary-item"><div class="stats-summary-lbl">ចំណាយសរុប</div><div class="stats-summary-val" id="ss-expense" style="color:var(--red)">$0</div></div>
+        <div class="stats-summary-item"><div class="stats-summary-lbl">សមតុល្យ</div><div class="stats-summary-val" id="ss-balance">$0</div></div>
+        <div class="stats-summary-item"><div class="stats-summary-lbl">ប្រតិបត្តិការ</div><div class="stats-summary-val" id="ss-count">0</div></div>
+      </div>
+      <!-- Monthly Comparison Chart -->
       <div class="stat-card">
-        <div class="stat-card-title">ប្រជុំ ៦ ខែ (USD)</div>
-        <div id="bar-chart-wrap" style="display:flex;align-items:flex-end;gap:6px;height:100px;padding-top:8px;"></div>
-        <div id="bar-labels" style="display:flex;gap:6px;margin-top:6px;"></div>
+        <div class="stat-card-title">ប្រជុំប្រចាំខែ</div>
+        <div class="stats-legend">
+          <div class="stats-legend-item"><div class="stats-legend-dot" style="background:var(--green)"></div>ចំណូល</div>
+          <div class="stats-legend-item"><div class="stats-legend-dot" style="background:var(--red)"></div>ចំណាយ</div>
+        </div>
+        <div class="stats-compare-bar" id="stats-compare-chart"></div>
+        <div class="stats-bar-labels" id="stats-bar-labels"></div>
+      </div>
+      <!-- Category Breakdown -->
+      <div class="stat-card">
+        <div class="stat-card-title" id="cat-breakdown-title">ចំណាយតាមប្រភេទ</div>
+        <div id="cat-breakdown"></div>
+      </div>
+      <!-- Top Transactions -->
+      <div class="stat-card">
+        <div class="stat-card-title" id="top-tx-title">ប្រតិបត្តិការធំជាងគេ</div>
+        <div id="top-tx-list"></div>
       </div>
     </div>
   </div>
+
+  <!-- SETTINGS -->
   <div class="screen hidden" id="screen-settings">
     <div class="nav"><div class="nav-title">ការកំណត់</div></div>
     <div class="content" style="padding-top:16px;">
@@ -410,6 +571,7 @@
           <div class="settings-row-arrow" style="color:var(--red);">›</div>
         </div>
       </div>
+
       <div style="font-size:13px;color:var(--label3);padding:0 4px 8px;text-transform:uppercase;letter-spacing:0.4px;">ទូទៅ</div>
       <div class="settings-group">
         <div class="settings-row">
@@ -424,7 +586,22 @@
             <option value="USD">USD ($)</option><option value="KHR">KHR (៛)</option>
           </select>
         </div>
+        <div class="settings-row" id="btn-passcode-setting">
+          <div class="settings-row-icon" style="background:rgba(0,122,255,0.12);">🔒</div>
+          <div class="settings-row-label">Passcode ៤ ខ្ទង់</div>
+          <div class="settings-row-value" id="passcode-status-label" style="color:var(--label3);font-size:14px;">បិទ</div>
+          <div class="settings-row-arrow">›</div>
+        </div>
       </div>
+
+      <!-- Category Manager -->
+      <div style="font-size:13px;color:var(--label3);padding:0 4px 8px;text-transform:uppercase;letter-spacing:0.4px;">ប្រភេទ</div>
+      <div class="cat-add-row">
+        <input type="text" class="cat-add-input" id="new-cat-input" placeholder="ឧ. 🎓 ការសិក្សា">
+        <button class="cat-add-btn" id="btn-add-cat">+ បន្ថែម</button>
+      </div>
+      <div class="settings-group" id="cat-settings-list"></div>
+
       <div style="font-size:13px;color:var(--label3);padding:0 4px 8px;text-transform:uppercase;letter-spacing:0.4px;">ទិន្នន័យ</div>
       <div class="settings-group">
         <div class="settings-row" id="btn-export"><div class="settings-row-icon" style="background:rgba(0,122,255,0.12);">📊</div><div class="settings-row-label">នាំចេញ CSV</div><div class="settings-row-arrow">›</div></div>
@@ -433,11 +610,12 @@
       </div>
       <div style="font-size:13px;color:var(--label3);padding:0 4px 8px;text-transform:uppercase;letter-spacing:0.4px;">អំពី</div>
       <div class="settings-group">
-        <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:rgba(0,122,255,0.12);">ℹ️</div><div class="settings-row-label">កំណែ</div><div class="settings-row-value">2.1</div></div>
+        <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:rgba(0,122,255,0.12);">ℹ️</div><div class="settings-row-label">កំណែ</div><div class="settings-row-value">3.0</div></div>
         <div class="settings-row" style="cursor:default;"><div class="settings-row-icon" style="background:rgba(255,149,0,0.12);">🔥</div><div class="settings-row-label">Firebase Sync</div><div class="settings-row-value" id="firebase-status" style="color:var(--green);">⬤ ផ្ទុកឡើង</div></div>
       </div>
     </div>
   </div>
+
   <div class="tab-bar">
     <button class="tab-item active" data-screen="home"><span class="tab-icon">💳</span><span class="tab-label">ផ្ទះ</span></button>
     <button class="tab-item" data-screen="stats"><span class="tab-icon">📊</span><span class="tab-label">ស្ថិតិ</span></button>
@@ -445,6 +623,8 @@
   </div>
   <button class="fab" id="fab">+</button>
   <div class="sheet-overlay" id="sheet-overlay"></div>
+
+  <!-- ADD SHEET -->
   <div class="sheet" id="add-sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-nav"><button class="btn-text" id="btn-cancel-sheet">បោះបង់</button><div class="sheet-title">ចូលប្រតិបត្តិការ</div><button class="btn-text bold" id="btn-save-sheet">រក្សាទុក</button></div>
@@ -452,35 +632,20 @@
       <div class="seg"><button class="seg-btn active" data-type="expense">💸 ចំណាយ</button><button class="seg-btn" data-type="income">💰 ចំណូល</button></div>
       <div class="amount-display expense" id="amount-display">0.00</div>
       <div class="form-section">
-        <div class="form-row"><div class="form-label">ចំណាំ</div><input type="text" class="form-input" id="f-note" placeholder="ឧ. ទិញ iPhone"></div>
         <div class="form-row"><div class="form-label">ទឹកប្រាក់</div><input type="number" class="form-input" id="f-amount" placeholder="0.00" step="0.01" inputmode="decimal"></div>
+        <div class="form-row"><div class="form-label">ចំណាំ</div><input type="text" class="form-input" id="f-note" placeholder="(មិនចាំបាច់)"></div>
         <div class="form-row"><div class="form-label">រូបិយប័ណ្ណ</div><select class="form-input" id="f-currency"><option value="USD">USD ($)</option><option value="KHR">KHR (៛)</option></select></div>
-<div class="form-row">
-  <div class="form-label">ប្រភេទ</div>
-
-  <input
-    type="text"
-    class="form-input"
-    id="f-category"
-    placeholder="បញ្ចូលប្រភេទ..."
-    list="category-list"
-  >
-
-  <datalist id="category-list">
-    <option value="🍜 អាហារ">
-    <option value="🚗 ដឹកជញ្ជូន">
-    <option value="🛍️ ទិញទំនិញ">
-    <option value="🏥 សុខភាព">
-    <option value="🎬 កំសាន្ត">
-    <option value="💼 ប្រាក់ខែ">
-    <option value="📦 ផ្សេងៗ">
-  </datalist>
-</div>
+        <div class="form-row">
+          <div class="form-label">ប្រភេទ</div>
+          <select class="form-input" id="f-category"></select>
+        </div>
         <div class="form-row"><div class="form-label">កាលបរិច្ឆេទ</div><input type="date" class="form-input" id="f-date"></div>
       </div>
       <button class="btn-submit expense" id="btn-add-submit">+ ចំណាយ</button>
     </div>
   </div>
+
+  <!-- DETAIL SHEET -->
   <div class="sheet" id="detail-sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-nav"><div></div><div class="sheet-title">ព័ត៌មានលម្អិត</div><button class="btn-text" id="btn-close-detail">បិទ</button></div>
@@ -495,6 +660,8 @@
       <button class="detail-btn-del" id="btn-del-detail">🗑  លុបប្រតិបត្តិការ</button>
     </div>
   </div>
+
+  <!-- REPORT SHEET -->
   <div class="sheet" id="report-sheet">
     <div class="sheet-handle"></div>
     <div class="sheet-nav"><div></div><div class="sheet-title">របាយការណ៍</div><button class="btn-text" id="btn-close-report">បិទ</button></div>
@@ -521,6 +688,7 @@
       </div>
     </div>
   </div>
+
   <div class="toast" id="toast"></div>
 </div>
 
@@ -530,18 +698,9 @@ import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.12.2/firebas
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged, signOut, signInWithPopup, signInWithRedirect, getRedirectResult, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// ════════════════════════════════════════════════
-// ★★★ ត្រូវប្តូរ authDomain ★★★
-// Safari iOS ត្រូវការ authDomain = Vercel domain
-// ជំហាន:
-//   1. មើល Vercel dashboard → copy domain (ឧ. my-wallet.vercel.app)
-//   2. ប្តូរ authDomain ខាងក្រោម
-//   3. Firebase Console → Authentication → Settings
-//      → Authorized domains → Add → my-wallet.vercel.app
-// ════════════════════════════════════════════════
 const firebaseConfig = {
   apiKey: "AIzaSyBW0ZaL328PqBYcpcEHml5X8ab_qJET09g",
-  authDomain: "expensetracker-9f470.firebaseapp.com", // ★ ប្តូរជា yourapp.vercel.app
+  authDomain: "expensetracker-9f470.firebaseapp.com",
   projectId: "expensetracker-9f470",
   storageBucket: "expensetracker-9f470.firebasestorage.app",
   messagingSenderId: "825269346962",
@@ -554,8 +713,7 @@ getAnalytics(app);
 const db = getFirestore(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
-googleProvider.addScope('email');
-googleProvider.addScope('profile');
+googleProvider.addScope('email'); googleProvider.addScope('profile');
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
 // ══ STATE ══════════════════════════════════════
@@ -563,6 +721,50 @@ const EXCHANGE_RATE = 4100;
 let transactions = [], viewCurrency = localStorage.getItem('viewCurrency') || 'USD';
 let currentType = 'expense', activeMonth = '', activeScreen = 'home';
 let detailTxId = null, currentUser = null, unsubFS = null, isRegMode = false;
+let statsPeriod = 'month', statsType = 'all';
+
+// ══ CATEGORIES ══════════════════════════════════
+const DEFAULT_CATS = ['🍜 អាហារ','🚗 ដឹកជញ្ជូន','🛍️ ទិញទំនិញ','🏥 សុខភាព','🎬 កំសាន្ត','💼 ប្រាក់ខែ','📦 ផ្សេងៗ'];
+let customCategories = JSON.parse(localStorage.getItem('customCategories') || 'null') || [...DEFAULT_CATS];
+
+function saveCategories() { localStorage.setItem('customCategories', JSON.stringify(customCategories)); }
+
+function updateCategoryUI() {
+  // Update form select
+  const fcat = document.getElementById('f-category');
+  const prev = fcat.value;
+  fcat.innerHTML = customCategories.map(c => `<option value="${c}">${c}</option>`).join('');
+  if (customCategories.includes(prev)) fcat.value = prev;
+
+  // Update cat-filter on home
+  const cf = document.getElementById('cat-filter');
+  const prevF = cf.value;
+  cf.innerHTML = '<option value="">ទាំងអស់</option>' + customCategories.map(c => `<option value="${c}">${c}</option>`).join('');
+  if (customCategories.includes(prevF)) cf.value = prevF;
+
+  // Update settings category list
+  const list = document.getElementById('cat-settings-list');
+  list.innerHTML = customCategories.map((c, i) =>
+    `<div class="cat-manage-row"><span class="cat-manage-name">${c}</span><button class="cat-del-btn" data-i="${i}">✕</button></div>`
+  ).join('');
+  list.querySelectorAll('.cat-del-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const idx = parseInt(btn.dataset.i);
+      customCategories.splice(idx, 1);
+      saveCategories(); updateCategoryUI();
+    });
+  });
+}
+
+document.getElementById('btn-add-cat').addEventListener('click', () => {
+  const inp = document.getElementById('new-cat-input');
+  const val = inp.value.trim();
+  if (!val) { showToast('⚠️ សូមបញ្ចូលប្រភេទ'); return; }
+  if (customCategories.includes(val)) { showToast('⚠️ ប្រភេទនេះមានហើយ'); return; }
+  customCategories.push(val); saveCategories(); updateCategoryUI();
+  inp.value = ''; showToast('✅ បន្ថែមប្រភេទរួចរាល់');
+});
+document.getElementById('new-cat-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('btn-add-cat').click(); });
 
 // ══ UTILS ══════════════════════════════════════
 const fmt = (amt, cur) => cur === 'USD'
@@ -574,6 +776,144 @@ const monthLabel = m => { if (!m) return ''; const [y,mo] = m.split('-'); return
 const getCatClass = cat => { if (!cat) return 'cat-other'; if (cat.includes('អាហារ')) return 'cat-food'; if (cat.includes('ដឹកជញ្ជូន')) return 'cat-transport'; if (cat.includes('ទិញទំនិញ')) return 'cat-shopping'; if (cat.includes('សុខភាព')) return 'cat-health'; if (cat.includes('ប្រាក់ខែ')) return 'cat-income'; if (cat.includes('កំសាន្ត')) return 'cat-entertainment'; return 'cat-other'; };
 function showToast(msg) { const t = document.getElementById('toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2400); }
 const txCol = () => collection(db, 'users', currentUser.uid, 'transactions');
+
+// ══ PASSCODE ═════════════════════════════════════
+function getPasscode() { return localStorage.getItem('appPasscode') || ''; }
+function setPasscode(code) { localStorage.setItem('appPasscode', code); updatePasscodeStatusLabel(); }
+function clearPasscode() { localStorage.removeItem('appPasscode'); updatePasscodeStatusLabel(); }
+function updatePasscodeStatusLabel() {
+  const el = document.getElementById('passcode-status-label');
+  if (el) el.textContent = getPasscode() ? 'បើក ✓' : 'បិទ';
+}
+
+// Lock screen logic
+let pcInput = '';
+function showPasscodeLock() {
+  const el = document.getElementById('passcode-screen');
+  el.classList.remove('gone', 'fade-out');
+  pcInput = '';
+  updatePcDots(document.getElementById('pc-dots'), 0);
+  document.getElementById('pc-error').textContent = '';
+  document.getElementById('pc-sub').textContent = 'បញ្ចូល Passcode';
+}
+function hidePasscodeLock() {
+  const el = document.getElementById('passcode-screen');
+  el.classList.add('fade-out');
+  setTimeout(() => el.classList.add('gone'), 320);
+}
+function updatePcDots(container, n) {
+  container.querySelectorAll('.passcode-dot, .passcode-modal-dot').forEach((d, i) => {
+    d.classList.toggle('filled', i < n);
+  });
+}
+document.querySelectorAll('#passcode-screen .passcode-key').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const k = btn.dataset.k;
+    if (k === 'del') { pcInput = pcInput.slice(0,-1); }
+    else if (pcInput.length < 4) { pcInput += k; }
+    updatePcDots(document.getElementById('pc-dots'), pcInput.length);
+    if (pcInput.length === 4) {
+      if (pcInput === getPasscode()) {
+        hidePasscodeLock();
+      } else {
+        document.getElementById('pc-error').textContent = '❌ Passcode មិនត្រឹមត្រូវ';
+        document.getElementById('pc-dots').querySelectorAll('.passcode-dot').forEach(d => { d.classList.add('shake'); setTimeout(() => d.classList.remove('shake'), 400); });
+        setTimeout(() => { pcInput = ''; updatePcDots(document.getElementById('pc-dots'), 0); document.getElementById('pc-error').textContent = ''; }, 700);
+      }
+    }
+  });
+});
+
+// Passcode setup modal
+let pcModalStep = 0, pcModalFirst = '', pcModalInput = '';
+function openPasscodeModal(mode='set') {
+  const overlay = document.getElementById('pc-modal-overlay');
+  overlay.classList.remove('hidden');
+  pcModalStep = 0; pcModalFirst = ''; pcModalInput = '';
+  if (mode === 'set') {
+    document.getElementById('pc-modal-title').textContent = 'កំណត់ Passcode';
+    document.getElementById('pc-modal-sub').textContent = 'បញ្ចូលលេខ ៤ ខ្ទង់ថ្មី';
+  } else if (mode === 'disable') {
+    document.getElementById('pc-modal-title').textContent = 'បិទ Passcode';
+    document.getElementById('pc-modal-sub').textContent = 'បញ្ចូល Passcode បច្ចុប្បន្ន';
+    pcModalStep = 99;
+  } else if (mode === 'change') {
+    document.getElementById('pc-modal-title').textContent = 'ផ្លាស់ប្ដូរ Passcode';
+    document.getElementById('pc-modal-sub').textContent = 'បញ្ចូល Passcode បច្ចុប្បន្ន';
+    pcModalStep = 98;
+  }
+  updatePcDots(document.getElementById('pc-modal-dots'), 0);
+}
+document.getElementById('pc-modal-cancel').addEventListener('click', () => {
+  document.getElementById('pc-modal-overlay').classList.add('hidden');
+});
+document.querySelectorAll('.passcode-modal-key').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const k = btn.dataset.mk;
+    if (k === 'del') { pcModalInput = pcModalInput.slice(0,-1); }
+    else if (pcModalInput.length < 4) { pcModalInput += k; }
+    updatePcDots(document.getElementById('pc-modal-dots'), pcModalInput.length);
+    if (pcModalInput.length === 4) {
+      if (pcModalStep === 0) {
+        // First entry of new passcode
+        pcModalFirst = pcModalInput; pcModalInput = '';
+        pcModalStep = 1;
+        document.getElementById('pc-modal-sub').textContent = 'បញ្ចូលម្ដងទៀតដើម្បីបញ្ជាក់';
+        updatePcDots(document.getElementById('pc-modal-dots'), 0);
+      } else if (pcModalStep === 1) {
+        // Confirm
+        if (pcModalInput === pcModalFirst) {
+          setPasscode(pcModalInput);
+          document.getElementById('pc-modal-overlay').classList.add('hidden');
+          showToast('🔒 Passcode បានកំណត់រួចរាល់');
+        } else {
+          document.getElementById('pc-modal-sub').textContent = '❌ មិនត្រូវគ្នា — ព្យាយាមម្ដងទៀត';
+          pcModalInput = ''; pcModalFirst = ''; pcModalStep = 0;
+          setTimeout(() => { document.getElementById('pc-modal-sub').textContent = 'បញ្ចូលលេខ ៤ ខ្ទង់ថ្មី'; }, 1500);
+          updatePcDots(document.getElementById('pc-modal-dots'), 0);
+        }
+      } else if (pcModalStep === 99) {
+        // Disable: verify current
+        if (pcModalInput === getPasscode()) {
+          clearPasscode();
+          document.getElementById('pc-modal-overlay').classList.add('hidden');
+          showToast('🔓 Passcode ត្រូវបានបិទ');
+        } else {
+          document.getElementById('pc-modal-sub').textContent = '❌ Passcode មិនត្រឹមត្រូវ';
+          pcModalInput = '';
+          setTimeout(() => { document.getElementById('pc-modal-sub').textContent = 'បញ្ចូល Passcode បច្ចុប្បន្ន'; }, 1500);
+          updatePcDots(document.getElementById('pc-modal-dots'), 0);
+        }
+      } else if (pcModalStep === 98) {
+        // Change: verify current first
+        if (pcModalInput === getPasscode()) {
+          pcModalInput = ''; pcModalStep = 0;
+          document.getElementById('pc-modal-title').textContent = 'Passcode ថ្មី';
+          document.getElementById('pc-modal-sub').textContent = 'បញ្ចូលលេខ ៤ ខ្ទង់ថ្មី';
+          updatePcDots(document.getElementById('pc-modal-dots'), 0);
+        } else {
+          document.getElementById('pc-modal-sub').textContent = '❌ Passcode មិនត្រឹមត្រូវ';
+          pcModalInput = '';
+          setTimeout(() => { document.getElementById('pc-modal-sub').textContent = 'បញ្ចូល Passcode បច្ចុប្បន្ន'; }, 1500);
+          updatePcDots(document.getElementById('pc-modal-dots'), 0);
+        }
+      }
+    }
+  });
+});
+
+document.getElementById('btn-passcode-setting').addEventListener('click', () => {
+  if (getPasscode()) {
+    // Show options: change or disable
+    if (confirm('Passcode: ចុច OK ដើម្បីផ្លាស់ប្ដូរ, ចុច Cancel ដើម្បីបិទ')) {
+      openPasscodeModal('change');
+    } else {
+      openPasscodeModal('disable');
+    }
+  } else {
+    openPasscodeModal('set');
+  }
+});
 
 // ══ LOADING SPLASH ══════════════════════════════
 function hideLoadingSplash() {
@@ -591,12 +931,13 @@ function showApp() {
     setTimeout(() => { as.style.display = 'none'; as.classList.remove('hiding'); }, 380);
   }
   document.getElementById('app').style.display = '';
+  // Show passcode if set
+  if (getPasscode()) { showPasscodeLock(); }
 }
 function showAuthScreen() {
   document.getElementById('app').style.display = 'none';
   const as = document.getElementById('auth-screen');
-  as.classList.remove('hiding');
-  as.style.display = 'flex';
+  as.classList.remove('hiding'); as.style.display = 'flex';
   transactions = [];
 }
 function setAuthLoading(v) {
@@ -618,12 +959,8 @@ document.getElementById('btn-google-signin').addEventListener('click', async () 
   document.getElementById('google-btn-text').textContent = 'កំពុងភ្ជាប់...';
   try {
     if (isSafariIOS()) {
-      showAuthInfo('🔄 កំពុង redirect ទៅ Google...');
-      await signInWithRedirect(auth, googleProvider);
-      // page reloads → initAuth() handles getRedirectResult
-    } else {
-      await signInWithPopup(auth, googleProvider);
-    }
+      showAuthInfo('🔄 កំពុង redirect ទៅ Google...'); await signInWithRedirect(auth, googleProvider);
+    } else { await signInWithPopup(auth, googleProvider); }
   } catch(e) {
     document.getElementById('google-btn-text').textContent = 'ចូលជាមួយ Google';
     if (e.code === 'auth/popup-closed-by-user' || e.code === 'auth/cancelled-popup-request') { setAuthLoading(false); return; }
@@ -660,42 +997,19 @@ document.getElementById('btn-auth-submit').addEventListener('click', handleEmail
 document.getElementById('auth-pass-input').addEventListener('keydown', e => { if (e.key === 'Enter') handleEmailAuth(); });
 document.getElementById('auth-email-input').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('auth-pass-input').focus(); });
 
-// ══════════════════════════════════════════════════════════════
-// ★ CORE FIX FOR IOS SAFARI:
-// Problem: onAuthStateChanged fires null BEFORE getRedirectResult completes.
-// So after Google redirect back to app, auth state = null → shows login screen.
-//
-// Fix: await getRedirectResult() FIRST (completes the Google auth handshake),
-// THEN subscribe to onAuthStateChanged. Now auth.currentUser is set correctly.
-// ══════════════════════════════════════════════════════════════
 async function initAuth() {
   let redirectErr = null;
-  try {
-    await getRedirectResult(auth);
-    // If redirect login succeeded, Firebase has set auth.currentUser internally.
-    // onAuthStateChanged below will now fire with the correct user (not null).
-  } catch(e) {
+  try { await getRedirectResult(auth); } catch(e) {
     const ignore = ['auth/null-user', 'auth/no-current-user', 'auth/cancelled-popup-request'];
     if (e.code && !ignore.includes(e.code)) redirectErr = e;
   }
-
-  // Now safe to listen — first emission reflects actual auth state
   onAuthStateChanged(auth, user => {
     hideLoadingSplash();
     if (user) {
-      currentUser = user;
-      setAuthLoading(false);
-      showApp();
-      updateUserProfile(user);
-      initFirestoreListener();
+      currentUser = user; setAuthLoading(false); showApp(); updateUserProfile(user); initFirestoreListener();
     } else {
-      currentUser = null;
-      if (unsubFS) { unsubFS(); unsubFS = null; }
-      transactions = [];
-      showAuthScreen();
-      if (redirectErr) {
-        setTimeout(() => { showAuthErr(authErrMsg(redirectErr.code)); redirectErr = null; }, 300);
-      }
+      currentUser = null; if (unsubFS) { unsubFS(); unsubFS = null; } transactions = []; showAuthScreen();
+      if (redirectErr) { setTimeout(() => { showAuthErr(authErrMsg(redirectErr.code)); redirectErr = null; }, 300); }
     }
   });
 }
@@ -739,8 +1053,13 @@ darkToggle.addEventListener('change', () => applyTheme(darkToggle.checked));
 
 // ══ CURRENCY ════════════════════════════════════
 function updateCurrBtn() { document.getElementById('btn-currency').textContent = viewCurrency==='USD'?'🇺🇸':'🇰🇭'; }
-document.getElementById('btn-currency').addEventListener('click', () => { viewCurrency=viewCurrency==='USD'?'KHR':'USD'; localStorage.setItem('viewCurrency',viewCurrency); document.getElementById('settings-currency').value=viewCurrency; updateCurrBtn(); render(); });
-document.getElementById('settings-currency').addEventListener('change', e => { viewCurrency=e.target.value; localStorage.setItem('viewCurrency',viewCurrency); updateCurrBtn(); render(); });
+document.getElementById('btn-currency').addEventListener('click', () => {
+  viewCurrency = viewCurrency==='USD'?'KHR':'USD'; localStorage.setItem('viewCurrency',viewCurrency);
+  document.getElementById('settings-currency').value = viewCurrency; updateCurrBtn(); render();
+});
+document.getElementById('settings-currency').addEventListener('change', e => {
+  viewCurrency = e.target.value; localStorage.setItem('viewCurrency',viewCurrency); updateCurrBtn(); render();
+});
 updateCurrBtn(); document.getElementById('settings-currency').value = viewCurrency;
 
 // ══ MONTH CHIPS ══════════════════════════════════
@@ -785,27 +1104,102 @@ function renderTxList() {
     groups[date].forEach((t,i) => {
       const cv=convert(t.amount,t.currency,viewCurrency), el=document.createElement('div');
       el.className='tx-item'; el.style.animationDelay=(i*0.04)+'s';
-      el.innerHTML = `<div class="tx-icon-wrap ${getCatClass(t.category)}">${t.category?t.category.split(' ')[0]:'📦'}</div><div class="tx-body"><div class="tx-note">${t.note}</div><div class="tx-meta">${t.category||'📦 ផ្សេងៗ'}</div></div><div class="tx-right"><div class="tx-amount" style="color:var(${t.type==='income'?'--green':'--red'})">${t.type==='income'?'+':'-'}${fmt(cv,viewCurrency)}</div></div>`;
+      el.innerHTML = `<div class="tx-icon-wrap ${getCatClass(t.category)}">${t.category?t.category.split(' ')[0]:'📦'}</div><div class="tx-body"><div class="tx-note">${t.note||t.category||'—'}</div><div class="tx-meta">${t.category||'📦 ផ្សេងៗ'}</div></div><div class="tx-right"><div class="tx-amount" style="color:var(${t.type==='income'?'--green':'--red'})">${t.type==='income'?'+':'-'}${fmt(cv,viewCurrency)}</div></div>`;
       el.addEventListener('click', ()=>openDetail(t)); grp.appendChild(el);
     });
     wrap.appendChild(grp);
   });
 }
 
-function render() { buildMonthChips(); renderHero(); renderTxList(); renderStats(); }
+function render() { buildMonthChips(); renderHero(); renderTxList(); renderStats(); updateCategoryUI(); updatePasscodeStatusLabel(); }
 
-// ══ STATS ════════════════════════════════════════
-function renderStats() {
-  const catTotals = {};
-  transactions.filter(t=>t.type==='expense').forEach(t => { const k=t.category||'📦 ផ្សេងៗ'; catTotals[k]=(catTotals[k]||0)+convert(t.amount,t.currency,viewCurrency); });
-  const total=Object.values(catTotals).reduce((a,b)=>a+b,0)||1, sorted=Object.entries(catTotals).sort((a,b)=>b[1]-a[1]), colors=['var(--orange)','var(--blue)','var(--purple)','var(--red)','var(--green)'];
-  document.getElementById('cat-breakdown').innerHTML = sorted.length ? sorted.map(([k,v],i)=>`<div class="progress-bar-wrap"><div class="progress-label"><span>${k}</span><span style="color:var(--label3)">${fmt(v,viewCurrency)}</span></div><div class="progress-track"><div class="progress-fill" style="width:${(v/total*100).toFixed(1)}%;background:${colors[i%colors.length]}"></div></div></div>`).join('') : '<div style="color:var(--label3);font-size:14px;padding:8px 0">គ្មានទិន្នន័យ</div>';
-  const months6=[],now=new Date();
-  for(let i=5;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i,1);months6.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);}
-  const mExp=months6.map(m=>transactions.filter(t=>t.type==='expense'&&t.date.startsWith(m)).reduce((s,t)=>s+convert(t.amount,t.currency,'USD'),0)), maxV=Math.max(...mExp,1);
-  document.getElementById('bar-chart-wrap').innerHTML = months6.map((m,i)=>{const h=Math.max(4,(mExp[i]/maxV)*90);return `<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;"><div style="font-size:11px;color:var(--label3)">${mExp[i]>0?'$'+mExp[i].toFixed(0):''}</div><div style="width:100%;height:${h}px;background:${m===activeMonth?'var(--blue)':'var(--bg3)'};border-radius:5px;"></div></div>`;}).join('');
-  document.getElementById('bar-labels').innerHTML = months6.map(m=>{const [,mo]=m.split('-');return `<div style="flex:1;text-align:center;font-size:11px;color:var(--label3)">${parseInt(mo,10)}</div>`;}).join('');
+// ══ STATS (Enhanced) ═════════════════════════════
+function getStatsPeriodTxs() {
+  const now = new Date();
+  const thisM = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  if (statsPeriod === 'month') return transactions.filter(t => t.date.startsWith(thisM));
+  if (statsPeriod === '3month') {
+    const cutoff = new Date(now.getFullYear(), now.getMonth()-2, 1).toISOString().split('T')[0].substring(0,7);
+    return transactions.filter(t => t.date.substring(0,7) >= cutoff);
+  }
+  if (statsPeriod === '6month') {
+    const cutoff = new Date(now.getFullYear(), now.getMonth()-5, 1).toISOString().split('T')[0].substring(0,7);
+    return transactions.filter(t => t.date.substring(0,7) >= cutoff);
+  }
+  if (statsPeriod === 'year') {
+    return transactions.filter(t => t.date.startsWith(String(now.getFullYear())));
+  }
+  return [...transactions];
 }
+
+function renderStats() {
+  const base = getStatsPeriodTxs();
+  const filtered = statsType === 'all' ? base : base.filter(t => t.type === statsType);
+
+  // Summary
+  let totalInc=0, totalExp=0;
+  base.forEach(t => { const v=convert(t.amount,t.currency,viewCurrency); if(t.type==='income') totalInc+=v; else totalExp+=v; });
+  const balance = totalInc - totalExp;
+  document.getElementById('ss-income').textContent = fmt(totalInc, viewCurrency);
+  document.getElementById('ss-expense').textContent = fmt(totalExp, viewCurrency);
+  const balEl = document.getElementById('ss-balance');
+  balEl.textContent = fmt(Math.abs(balance), viewCurrency);
+  balEl.style.color = balance >= 0 ? 'var(--green)' : 'var(--red)';
+  document.getElementById('ss-count').textContent = base.length;
+
+  // Monthly comparison (last 6 months)
+  const months6=[], now2=new Date();
+  for(let i=5;i>=0;i--){const d=new Date(now2.getFullYear(),now2.getMonth()-i,1);months6.push(`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`);}
+  const mInc=months6.map(m=>transactions.filter(t=>t.type==='income'&&t.date.startsWith(m)).reduce((s,t)=>s+convert(t.amount,t.currency,'USD'),0));
+  const mExp=months6.map(m=>transactions.filter(t=>t.type==='expense'&&t.date.startsWith(m)).reduce((s,t)=>s+convert(t.amount,t.currency,'USD'),0));
+  const maxV=Math.max(...mInc,...mExp,1);
+  document.getElementById('stats-compare-chart').innerHTML = months6.map((m,i)=>{
+    const hI=Math.max(2,(mInc[i]/maxV)*86), hE=Math.max(2,(mExp[i]/maxV)*86);
+    return `<div class="stats-bar-group"><div class="stats-bar-inc" style="height:${hI}px" title="ចំណូល: $${mInc[i].toFixed(0)}"></div><div class="stats-bar-exp" style="height:${hE}px" title="ចំណាយ: $${mExp[i].toFixed(0)}"></div></div>`;
+  }).join('');
+  document.getElementById('stats-bar-labels').innerHTML = months6.map(m=>{const [,mo]=m.split('-');return `<div class="stats-bar-label">${parseInt(mo,10)}</div>`;}).join('');
+
+  // Category breakdown
+  const catTotals = {};
+  filtered.forEach(t => { const k=t.category||'📦 ផ្សេងៗ'; catTotals[k]=(catTotals[k]||0)+convert(t.amount,t.currency,viewCurrency); });
+  const total=Object.values(catTotals).reduce((a,b)=>a+b,0)||1;
+  const sorted=Object.entries(catTotals).sort((a,b)=>b[1]-a[1]);
+  const colors=['var(--orange)','var(--blue)','var(--purple)','var(--red)','var(--green)','var(--blue)'];
+  const typeLbl = statsType==='income'?'ចំណូល':statsType==='expense'?'ចំណាយ':'ចំណាយ+ចំណូល';
+  document.getElementById('cat-breakdown-title').textContent = `${typeLbl}តាមប្រភេទ`;
+  document.getElementById('cat-breakdown').innerHTML = sorted.length
+    ? sorted.map(([k,v],i)=>`<div class="progress-bar-wrap"><div class="progress-label"><span>${k}</span><span style="color:var(--label3)">${fmt(v,viewCurrency)} <span style="font-size:11px">(${(v/total*100).toFixed(0)}%)</span></span></div><div class="progress-track"><div class="progress-fill" style="width:${(v/total*100).toFixed(1)}%;background:${colors[i%colors.length]}"></div></div></div>`).join('')
+    : '<div style="color:var(--label3);font-size:14px;padding:8px 0">គ្មានទិន្នន័យ</div>';
+
+  // Top transactions
+  document.getElementById('top-tx-title').textContent = statsType === 'income' ? 'ចំណូលធំជាងគេ ១០' : 'ចំណាយធំជាងគេ ១០';
+  const topTxType = statsType === 'all' ? 'expense' : statsType;
+  const topTxs = base.filter(t => t.type === topTxType).sort((a,b) => convert(b.amount,b.currency,'USD') - convert(a.amount,a.currency,'USD')).slice(0,10);
+  document.getElementById('top-tx-list').innerHTML = topTxs.length
+    ? topTxs.map(t => {
+        const v = convert(t.amount,t.currency,viewCurrency);
+        return `<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:0.5px solid var(--sep2);">
+          <div class="tx-icon-wrap ${getCatClass(t.category)}" style="width:36px;height:36px;font-size:16px;">${t.category?t.category.split(' ')[0]:'📦'}</div>
+          <div style="flex:1;min-width:0;"><div style="font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${t.note||t.category||'—'}</div><div style="font-size:12px;color:var(--label3);">${t.date} · ${t.category||'ផ្សេងៗ'}</div></div>
+          <div style="font-size:15px;font-weight:600;color:var(${t.type==='income'?'--green':'--red'})">${t.type==='income'?'+':'-'}${fmt(v,viewCurrency)}</div>
+        </div>`;
+      }).join('')
+    : '<div style="color:var(--label3);font-size:14px;padding:8px 0">គ្មានទិន្នន័យ</div>';
+}
+
+// Stats period buttons
+document.querySelectorAll('.stats-period-chip').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.stats-period-chip').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); statsPeriod = btn.dataset.period; renderStats();
+  });
+});
+document.querySelectorAll('.stats-type-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.stats-type-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active'); statsType = btn.dataset.stype; renderStats();
+  });
+});
 
 // ══ TABS ═════════════════════════════════════════
 document.querySelectorAll('.tab-item').forEach(tab => {
@@ -822,7 +1216,16 @@ document.querySelectorAll('.tab-item').forEach(tab => {
 
 // ══ ADD SHEET ════════════════════════════════════
 const fab=document.getElementById('fab'), overlay=document.getElementById('sheet-overlay'), addSheet=document.getElementById('add-sheet'), submitBtn=document.getElementById('btn-add-submit');
-function openAddSheet() { overlay.classList.add('active'); addSheet.classList.add('active'); fab.classList.add('open'); document.getElementById('f-date').value=todayStr(); document.getElementById('f-amount').value=''; document.getElementById('f-note').value=''; document.getElementById('amount-display').textContent='0.00'; }
+function openAddSheet() {
+  overlay.classList.add('active'); addSheet.classList.add('active'); fab.classList.add('open');
+  document.getElementById('f-date').value = todayStr();
+  document.getElementById('f-amount').value = '';
+  document.getElementById('f-note').value = '';
+  document.getElementById('amount-display').textContent = '0.00';
+  // Restore last used currency (Feature 3)
+  const lastCur = localStorage.getItem('lastCurrency') || viewCurrency || 'USD';
+  document.getElementById('f-currency').value = lastCur;
+}
 function closeAddSheet() { overlay.classList.remove('active'); addSheet.classList.remove('active'); fab.classList.remove('open'); }
 fab.addEventListener('click', openAddSheet);
 overlay.addEventListener('click', ()=>{closeAddSheet();closeDetailSheet();closeReportSheet();});
@@ -835,11 +1238,27 @@ document.querySelectorAll('.seg-btn').forEach(btn => {
   });
 });
 document.getElementById('f-amount').addEventListener('input', e=>{const v=parseFloat(e.target.value)||0;document.getElementById('amount-display').textContent=v.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});});
+
+// Remember last currency (Feature 3)
+document.getElementById('f-currency').addEventListener('change', e => {
+  localStorage.setItem('lastCurrency', e.target.value);
+});
+
 async function saveTransaction() {
   if(!currentUser){showToast('⚠️ Login ជាមុន');return;}
-  const amount=parseFloat(document.getElementById('f-amount').value), note=document.getElementById('f-note').value.trim(), currency=document.getElementById('f-currency').value, category=document.getElementById('f-category').value, date=document.getElementById('f-date').value;
-  if(!amount||amount<=0){showToast('⚠️ សូមបញ្ចូលទឹកប្រាក់');return;} if(!note){showToast('⚠️ សូមបញ្ចូលចំណាំ');return;} if(!date){showToast('⚠️ សូមជ្រើសកាលបរិច្ឆេទ');return;}
-  try { await addDoc(txCol(),{type:currentType,amount,currency,note,category,date,createdAt:new Date().toISOString()}); closeAddSheet(); showToast('✅ រក្សាទុករួចរាល់'); } catch(err){showToast('❌ '+err.message);}
+  const amount=parseFloat(document.getElementById('f-amount').value);
+  const note=document.getElementById('f-note').value.trim(); // Feature 1: note is optional
+  const currency=document.getElementById('f-currency').value;
+  const category=document.getElementById('f-category').value;
+  const date=document.getElementById('f-date').value;
+  if(!amount||amount<=0){showToast('⚠️ សូមបញ្ចូលទឹកប្រាក់');return;}
+  if(!date){showToast('⚠️ សូមជ្រើសកាលបរិច្ឆេទ');return;}
+  // Save last used currency
+  localStorage.setItem('lastCurrency', currency);
+  try {
+    await addDoc(txCol(),{type:currentType,amount,currency,note,category,date,createdAt:new Date().toISOString()});
+    closeAddSheet(); showToast('✅ រក្សាទុករួចរាល់');
+  } catch(err){showToast('❌ '+err.message);}
 }
 document.getElementById('btn-save-sheet').addEventListener('click', saveTransaction);
 submitBtn.addEventListener('click', saveTransaction);
@@ -850,7 +1269,7 @@ function openDetail(tx) {
   detailTxId=tx.id; const v=convert(tx.amount,tx.currency,viewCurrency);
   document.getElementById('detail-amount').textContent=(tx.type==='income'?'+':'-')+fmt(v,viewCurrency);
   document.getElementById('detail-amount').style.color=tx.type==='income'?'var(--green)':'var(--red)';
-  document.getElementById('detail-note').textContent=tx.note; document.getElementById('detail-date').textContent=tx.date;
+  document.getElementById('detail-note').textContent=tx.note||''; document.getElementById('detail-date').textContent=tx.date;
   document.getElementById('detail-cat').textContent=tx.category||'📦 ផ្សេងៗ'; document.getElementById('detail-curr').textContent=tx.currency+'  '+fmt(tx.amount,tx.currency);
   overlay.classList.add('active'); detailSheet.classList.add('active');
 }
@@ -886,7 +1305,7 @@ function openReportSheet() {
 function closeReportSheet() { overlay.classList.remove('active'); reportSheet.classList.remove('active'); }
 function buildReportText() {
   const d=buildReportData(), expL=Object.entries(d.catExp).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`  ${k}: ${fmt(v,viewCurrency)}`).join('\n'), incL=Object.entries(d.catInc).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`  ${k}: +${fmt(v,viewCurrency)}`).join('\n');
-  return [`📊 របាយការណ៍ - ${monthLabel(activeMonth)}`,`👤 ${currentUser?.displayName||currentUser?.email||'User'}`,`━━━━━━━━━━━━━━━━━━━━`,`💰 ចំណូលសរុប:  ${fmt(d.inc,viewCurrency)}`,`💸 ចំណាយសរុប: ${fmt(d.exp,viewCurrency)}`,`📈 សមតុល្យ:    ${fmt(d.balance,viewCurrency)}`,`📋 ប្រតិបត្តិការ: ${d.count} សន្លឹក`,`━━━━━━━━━━━━━━━━━━━━`,expL?`ចំណាយតាមប្រភេទ:\n${expL}`:'',`ចំណូលតាមប្រភេទ:\n${incL||'  គ្មាន'}`,`━━━━━━━━━━━━━━━━━━━━`,`💳 កាបូបលុយ v2.1`].filter(Boolean).join('\n');
+  return [`📊 របាយការណ៍ - ${monthLabel(activeMonth)}`,`👤 ${currentUser?.displayName||currentUser?.email||'User'}`,`━━━━━━━━━━━━━━━━━━━━`,`💰 ចំណូលសរុប:  ${fmt(d.inc,viewCurrency)}`,`💸 ចំណាយសរុប: ${fmt(d.exp,viewCurrency)}`,`📈 សមតុល្យ:    ${fmt(d.balance,viewCurrency)}`,`📋 ប្រតិបត្តិការ: ${d.count} សន្លឹក`,`━━━━━━━━━━━━━━━━━━━━`,expL?`ចំណាយតាមប្រភេទ:\n${expL}`:'',`ចំណូលតាមប្រភេទ:\n${incL||'  គ្មាន'}`,`━━━━━━━━━━━━━━━━━━━━`,`💳 កាបូបលុយ v3.0`].filter(Boolean).join('\n');
 }
 async function doShare(){const text=buildReportText();if(navigator.share){try{await navigator.share({title:`កាបូបលុយ - ${monthLabel(activeMonth)}`,text});return;}catch(e){if(e.name==='AbortError')return;}}doCopy(text);}
 function doCopy(text){navigator.clipboard.writeText(text||buildReportText()).then(()=>showToast('📋 ចម្លងរួចរាល់')).catch(()=>showToast('❌ មិនអាចចម្លង'));}
@@ -899,7 +1318,7 @@ document.getElementById('btn-do-copy').addEventListener('click', ()=>doCopy());
 // ══ SETTINGS ════════════════════════════════════
 document.getElementById('btn-export').addEventListener('click', ()=>{
   const rows=[['Date','Type','Amount','Currency','Category','Note']];
-  transactions.forEach(t=>rows.push([t.date,t.type,t.amount,t.currency,t.category||'',t.note]));
+  transactions.forEach(t=>rows.push([t.date,t.type,t.amount,t.currency,t.category||'',t.note||'']));
   const a=document.createElement('a'); a.href=URL.createObjectURL(new Blob([rows.map(r=>r.map(c=>`"${c}"`).join(',')).join('\n')],{type:'text/csv'})); a.download=`kabob-luy-${activeMonth}.csv`; a.click(); showToast('📤 នាំចេញ CSV រួចរាល់');
 });
 document.getElementById('btn-clear').addEventListener('click', async()=>{
@@ -908,6 +1327,10 @@ document.getElementById('btn-clear').addEventListener('click', async()=>{
 });
 document.getElementById('cat-filter').addEventListener('change', renderTxList);
 document.getElementById('f-date').value = todayStr();
+
+// Initialize category UI
+updateCategoryUI();
+updatePasscodeStatusLabel();
 </script>
 </body>
 </html>
